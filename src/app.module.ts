@@ -1,23 +1,28 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm'; // new
 import { TasksModule } from './tasks/tasks.module';
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from '@hapi/joi';
+
+import { DatabaseModule } from './database/database.module';
+// import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        POSTGRES_HOST: Joi.string().required(),
-        POSTGRES_PORT: Joi.number().required(),
-        POSTGRES_USER: Joi.string().required(),
-        POSTGRES_PASSWORD: Joi.string().required(),
-        POSTGRES_DB: Joi.string().required(),
-        PORT: Joi.number(),
-      })
-    }),
-    TasksModule
+    TypeOrmModule.forRoot(
+      {
+        type: 'postgres',
+        host: 'localhost',
+        port: 5432,
+        username: 'postgres',
+        password: 'eden258',
+        database: 'taskmanager',
+        autoLoadEntities: true,
+        synchronize: true,
+      }
+    ), 
+    DatabaseModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,12 +5,22 @@ import { TypeOrmModule } from '@nestjs/typeorm'; // new
 import { TasksModule } from './tasks/tasks.module';
 
 import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 // import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(
-    ), 
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT,10),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      autoLoadEntities: true,
+      logging: true,
+      synchronize: true,
+    }),
     DatabaseModule,
     TasksModule,
   ],

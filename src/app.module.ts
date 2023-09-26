@@ -3,10 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; // new
 import { TasksModule } from './tasks/tasks.module';
-
 import { DatabaseModule } from './database/database.module';
-import { ConfigModule } from '@nestjs/config';
-// import { DatabaseModule } from './database/database.module';
+
 
 @Module({
   imports: [

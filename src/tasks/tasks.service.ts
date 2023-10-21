@@ -36,5 +36,11 @@ export class TasksService {
     await this.taskRepository.save(newTask);
     return newTask;
   }
+
+  async deleteTask(id: number) {
+    const task = await this.getTaskById(id);
+    await this.taskRepository.delete(task);
+    return task;
+  }
 }
 

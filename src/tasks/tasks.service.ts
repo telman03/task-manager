@@ -37,6 +37,12 @@ export class TasksService {
     return newTask;
   }
 
+  async updateTask(id:number, title:string){
+    const task = await this.getTaskById(id);
+    task.title = title;
+    await this.taskRepository.save(task);
+    return task;
+  }
   async deleteTask(id: number) {
     const task = await this.getTaskById(id);
     await this.taskRepository.delete(task);

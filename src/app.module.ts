@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; // new
 import { TasksModule } from './tasks/tasks.module';
 import { DatabaseModule } from './database/database.module';
+import { PomodoroModule } from './pomodoro/pomodoro.module';
 
 
 @Module({
@@ -21,6 +22,7 @@ import { DatabaseModule } from './database/database.module';
     }),
     DatabaseModule,
     TasksModule,
+    PomodoroModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -35,4 +35,5 @@ export class PomodoroController {
         const remainingTime = this.pomodoroTimerService.getRemainingTime();
         return { remainingTime };
     }
+
 }

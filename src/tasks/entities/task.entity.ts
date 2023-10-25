@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -5,8 +6,10 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 class Task {
     
     @PrimaryGeneratedColumn()
+    @ApiProperty({ type: () => Number})
     public id: number;
 
+    @ApiProperty({ type: () => String})
     @Column()
     public title: string;
 }

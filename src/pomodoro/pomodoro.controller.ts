@@ -2,7 +2,9 @@
 
 import { Controller, Get, Post, Delete } from '@nestjs/common';
 import { PomodoroService } from './pomodoro.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('pomodoro')
 @Controller('pomodoro')
 export class PomodoroController {
     constructor(private readonly pomodoroTimerService: PomodoroService) { }

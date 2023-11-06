@@ -1,7 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import Task from './entities/task.entity';
 import { ApiBody, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { CreateTaskDto } from './dto/task.dto';
+import { Task } from '@prisma/client';
+import { UpdateTaskDto } from './dto/updatetask.dto';
+import { ApiParam, ApiResponse } from '@nestjs/swagger';
 
 
 @ApiTags('tasks')
@@ -11,31 +14,28 @@ export class TasksController {
 
   @Get()
   async getAllTasks(): Promise<Task[]> {
-    const tasks = await this.tasksService.getAllTasks();
-    return tasks;
+    return await this.tasksService.getAllTasks();
   }
 
   @Get(':id')
   async getTaskById(@Param('id') id: string): Promise<Task> {
-    const task = await this.tasksService.getTaskById(Number(id));
-    return task;
+    return await this.tasksService.getTaskById(Number(id));
   }
 
   @Post()
-  @ApiBody({ type: Task })
-  async createTask(@Body('title') title: string): Promise<Task> {
-    const newTask = await this.tasksService.createTask(title);
-    return newTask;
+  async createTask(@Body() dto: CreateTaskDto): Promise<Task> {
+    return await this.tasksService.createTask(dto);
   }
   
   @Put(':id')
-  @ApiProperty({ type: [String] })
-  async updateTask(@Param('id') id: number, @Body('title') title: string): Promise<Task>{
-    const task = await this.tasksService.updateTask(id, title);
-    return task;
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiBody({ type: UpdateTaskDto })
+  async updateTask(@Param('id') id: number, @Body() updateDto: UpdateTaskDto): Promise<Task>{
+    return await this.tasksService.updateTask(id, updateDto);
   }
 
   @Delete(':id')
+  @ApiParam({ name: 'id', type: 'number' })
   async deleteTask(@Param('id') id: number): Promise<Task>{
     const task = await this.tasksService.deleteTask(id);
     return task;

@@ -1,25 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import Task from './entities/task.entity';
+import { PrismaService } from '../prisma.service';
+import { CreateTaskDto } from './dto/task.dto';
+import { UpdateTaskDto } from './dto/updatetask.dto';
+
 
 @Injectable()
 export class TasksService {
-  constructor(
-    @InjectRepository(Task)
-    private readonly taskRepository: Repository<Task>
-  ){}
+  constructor(private prisma: PrismaService) {}
 
   async getAllTasks() {
-    const tasks = await this.taskRepository.find();
+    const tasks = await this.prisma.task.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+    });
     return tasks;
+
   }
 
   async getTaskById(id: number) {
-    const task = await this.taskRepository.findOne({
+    const task = await this.prisma.task.findUnique({
       where: {
-        id: id
+        id,
       },
     });
 
@@ -31,22 +34,40 @@ export class TasksService {
   
   }
 
-  async createTask(title: string) {
-    const newTask = await this.taskRepository.create({title});
-    await this.taskRepository.save(newTask);
+  async createTask(dto: CreateTaskDto) {
+    const newTask = await this.prisma.task.create({
+      data: {
+        title: dto.title,
+      },
+    });
     return newTask;
   }
 
-  async updateTask(id:number, title:string){
-    const task = await this.getTaskById(id);
-    task.title = title;
-    await this.taskRepository.save(task);
-    return task;
+  async updateTask(id: number, updateTaskDto: UpdateTaskDto){
+    const existingTask = await this.prisma.task.findUnique({
+      where: {
+        id
+      },
+    });
+    
+    if(!existingTask){   
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+
+    return this.prisma.task.update({
+      where: { id },
+      data: updateTaskDto,
+    });
+  
   }
   async deleteTask(id: number) {
-    const task = await this.getTaskById(id);
-    await this.taskRepository.delete(task);
-    return task;
+    const task = await this.prisma.task.findUnique({ where: { id } });
+
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+  
+    return this.prisma.task.delete({ where: { id } });
   }
 }
 

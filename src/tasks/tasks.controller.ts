@@ -18,8 +18,9 @@ export class TasksController {
   }
 
   @Get(':id')
-  async getTaskById(@Param('id') id: string): Promise<Task> {
-    return await this.tasksService.getTaskById(Number(id));
+  @ApiParam({ name: 'id', type: 'number' })
+  async getTaskById(@Param('id') id: number): Promise<Task> {
+    return await this.tasksService.getTaskById(id);
   }
 
   @Post()
@@ -37,7 +38,7 @@ export class TasksController {
   @Delete(':id')
   @ApiParam({ name: 'id', type: 'number' })
   async deleteTask(@Param('id') id: number): Promise<Task>{
-    const task = await this.tasksService.deleteTask(id);
-    return task;
+    return await this.tasksService.deleteTask(id);
+    
   }
 }

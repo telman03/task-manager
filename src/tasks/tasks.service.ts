@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
+import { BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateTaskDto } from './dto/task.dto';
 import { UpdateTaskDto } from './dto/updatetask.dto';
@@ -19,10 +19,11 @@ export class TasksService {
 
   }
 
-  async getTaskById(id: number) {
+  async getTaskById(id: any) {
+    const taskId = parseInt(id, 10);
     const task = await this.prisma.task.findUnique({
       where: {
-        id,
+        id: taskId,
       },
     });
 
@@ -43,31 +44,37 @@ export class TasksService {
     return newTask;
   }
 
-  async updateTask(id: number, updateTaskDto: UpdateTaskDto){
+  async updateTask(id: any, updateTaskDto: UpdateTaskDto){
+    const taskId = parseInt(id, 10);
+
     const existingTask = await this.prisma.task.findUnique({
-      where: {
-        id
-      },
+      where: { id: taskId },
     });
+
+    if (isNaN(taskId)) {
+      throw new BadRequestException('Invalid task ID');
+    }
     
     if(!existingTask){   
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
-
     return this.prisma.task.update({
-      where: { id },
+      where: { id: taskId },
       data: updateTaskDto,
     });
   
   }
-  async deleteTask(id: number) {
-    const task = await this.prisma.task.findUnique({ where: { id } });
+  async deleteTask(id: any) {
+    const taskId = parseInt(id, 10);
+    const task = await this.prisma.task.findUnique({ where: { id: taskId } });
 
     if (!task) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
   
-    return this.prisma.task.delete({ where: { id } });
+    return await this.prisma.task.delete({ 
+      where: { id: taskId },
+    });
   }
 }
 

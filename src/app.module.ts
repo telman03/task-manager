@@ -5,6 +5,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { PomodoroModule } from './pomodoro/pomodoro.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaService } from './prisma.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -12,6 +14,8 @@ import { PrismaService } from './prisma.service';
     ConfigModule.forRoot(),
     TasksModule,
     PomodoroModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -31,8 +31,6 @@ export class TasksService {
       return task;
     }
     throw new NotFoundException(`Task with ID ${id} not found`);
-  
-  
   }
 
   async createTask(dto: CreateTaskDto) {

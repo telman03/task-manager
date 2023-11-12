@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './dto/task.dto';
 import { UpdateTaskDto } from './dto/updatetask.dto';
 
@@ -16,7 +16,6 @@ export class TasksService {
       },
     });
     return tasks;
-
   }
 
   async getTaskById(id: any) {

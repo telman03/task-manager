@@ -9,6 +9,7 @@ import { UpdateTaskDto } from './dto/updatetask.dto';
 export class TasksService {
   constructor(private prisma: PrismaService) {}
 
+  
   async getAllTasks() {
     const tasks = await this.prisma.task.findMany({
       orderBy: {

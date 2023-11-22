@@ -8,11 +8,15 @@ import {
 } from '@nestjs/common';
 
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
-import { RtGuard } from '../common/guards';
+import { AtGuard, RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
 import { Tokens } from './types';
+import { ApiTags } from '@nestjs/swagger';
 
+
+
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -32,6 +36,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(AtGuard)
   @HttpCode(HttpStatus.OK)
   logout(@GetCurrentUserId() userId: number): Promise<boolean> {
     return this.authService.logout(userId);
